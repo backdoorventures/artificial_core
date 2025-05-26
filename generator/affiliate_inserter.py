@@ -3,16 +3,14 @@ def insert_affiliate_ctas(text: str, product: str = "Hostinger") -> str:
         cta_block = """
 ---
 
-## 🚀 Ready to Launch Your Website?
+## 🚀 Launch Your First Website Today
 
-If you're a student or beginner looking to start a blog, portfolio, or business in 2025, **Hostinger is the easiest and most affordable way to go live today.**
+If you're a student or beginner looking to start a blog, portfolio, or side hustle, **Hostinger is one of the top-rated platforms** for getting started fast — and affordably.
 
-Thousands of beginners trust Hostinger for its fast setup, free domain, and simple dashboard — without needing tech skills.
+It’s beginner-friendly, includes a free domain, and takes less than 10 minutes to go live.
 
-👉 **[Click here to launch your site with Hostinger now](https://your-affiliate-link.com/hosting)**  
-💡 You can be online in less than 10 minutes.
-
-Still unsure? [Read why I recommend Hostinger](https://your-affiliate-link.com/hosting) — it’s the same platform I use to run this blog.
+👉 **[Click here to launch your website with Hostinger](https://your-affiliate-link.com/hosting)**  
+🎯 No tech skills required. Perfect for your first online project.
 
 ---
 """
