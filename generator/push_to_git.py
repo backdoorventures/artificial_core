@@ -8,43 +8,50 @@ def push_post_to_github(filename: str, markdown_content: str):
     Pushes a markdown blog post to the `content/posts/` directory
     in the artificial_site GitHub repo using GitHub API.
     """
-    # Load secrets
+    # Load from secrets
     token = st.secrets["GITHUB_TOKEN"]
-    repo = st.secrets["GITHUB_REPO"]  # e.g., backdoorventures/artificial_site
+    repo = st.secrets["GITHUB_REPO"]
     branch = st.secrets.get("GITHUB_BRANCH", "main")
 
-    # Build API URL
     path = f"content/posts/{filename}"
     api_url = f"https://api.github.com/repos/{repo}/contents/{path}"
 
-    # Check if file exists to get the SHA (needed for update)
     headers = {
-        "Authorization": f"token {token}",
+        "Authorization": f"Bearer {token}",
         "Accept": "application/vnd.github+json"
     }
 
+    # Optional: fallback commit timestamp
+    now = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Check for existing file (get SHA for overwrite)
     sha = None
-    r = requests.get(api_url, headers=headers)
-    if r.status_code == 200:
-        sha = r.json()["sha"]
+    try:
+        check = requests.get(api_url, headers=headers)
+        if check.status_code == 200:
+            sha = check.json().get("sha")
+    except Exception as e:
+        return False, f"❌ Error checking file existence: {e}"
 
-    # Prepare payload
+    # Encode content
     encoded_content = base64.b64encode(markdown_content.encode("utf-8")).decode("utf-8")
-    commit_message = f"Add new blog post: {filename}"
 
+    # Build commit payload
     payload = {
-        "message": commit_message,
+        "message": f"📝 Add post: {filename} ({now})",
         "content": encoded_content,
         "branch": branch
     }
-
     if sha:
-        payload["sha"] = sha  # Required for updating existing files
+        payload["sha"] = sha  # Required to update existing file
 
-    # Push to GitHub
-    response = requests.put(api_url, headers=headers, json=payload)
+    # Push file to GitHub
+    try:
+        response = requests.put(api_url, headers=headers, json=payload)
+        if response.status_code in [200, 201]:
+            return True, f"✅ Successfully pushed `{filename}` to `{repo}` on `{branch}`"
+        else:
+            return False, f"❌ GitHub API error: {response.status_code} — {response.text}"
+    except Exception as e:
+        return False, f"❌ Push failed: {e}"
 
-    if response.status_code in [200, 201]:
-        return True, f"✅ Successfully pushed `{filename}` to `{repo}`"
-    else:
-        return False, f"❌ Failed to push. Status: {response.status_code}, Message: {response.text}"
