@@ -1,8 +1,15 @@
-from openai import OpenAI
 import streamlit as st
+from openai import OpenAI
+from generator.prompt_builder import build_prompt
+from generator.affiliate_inserter import insert_affiliate_ctas
+from generator.markdown_exporter import export_markdown
+from generator.push_to_git import push_post_to_github
 
-# === Initialize OpenAI client ===
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+# === Initialize OpenAI Client (NEW SDK FORMAT) ===
+client = OpenAI(
+    api_key=st.secrets["OPENAI_API_KEY"],
+    base_url="https://api.openai.com/v1"
+)
 
 # === Streamlit UI Config ===
 st.set_page_config(page_title="Backdoor Blog Builder", layout="centered")
@@ -21,7 +28,6 @@ if st.button("Generate Post") and keyword.strip():
         prompt = build_prompt(keyword, tone)
 
         try:
-            # ✅ Correct GPT-4-Turbo API call using new SDK
             response = client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[{"role": "user", "content": prompt}],
@@ -49,8 +55,10 @@ if st.button("Generate Post") and keyword.strip():
 
         success, msg = push_post_to_github(filename, markdown_output)
         st.info(msg)
+
 else:
     st.markdown("⚠️ Enter a keyword and click 'Generate Post' to begin.")
+
 
 
 
