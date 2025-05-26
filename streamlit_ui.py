@@ -1,12 +1,8 @@
+from openai import OpenAI
 import streamlit as st
-import openai
-from generator.prompt_builder import build_prompt
-from generator.affiliate_inserter import insert_affiliate_ctas
-from generator.markdown_exporter import export_markdown
-from generator.push_to_git import push_post_to_github
 
-# ✅ Set OpenAI API Key directly — DO NOT use OpenAI()
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# === Initialize OpenAI client ===
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # === Streamlit UI Config ===
 st.set_page_config(page_title="Backdoor Blog Builder", layout="centered")
@@ -22,12 +18,11 @@ include_cta = st.checkbox("✅ Insert Hostinger CTA", value=True)
 # === Generate Button ===
 if st.button("Generate Post") and keyword.strip():
     with st.spinner("🧠 Generating your blog post..."):
-
         prompt = build_prompt(keyword, tone)
 
         try:
-            # ✅ Correct call — NO OpenAI() constructor
-            response = openai.chat.completions.create(
+            # ✅ Correct GPT-4-Turbo API call using new SDK
+            response = client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7
@@ -54,9 +49,9 @@ if st.button("Generate Post") and keyword.strip():
 
         success, msg = push_post_to_github(filename, markdown_output)
         st.info(msg)
-
 else:
     st.markdown("⚠️ Enter a keyword and click 'Generate Post' to begin.")
+
 
 
 
