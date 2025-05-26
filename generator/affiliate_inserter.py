@@ -1,19 +1,18 @@
-import re
+def insert_affiliate_ctas(text: str, product: str = "Hostinger") -> str:
+    if product.lower() == "hostinger":
+        cta_block = """
+---
 
-# Map your keywords to affiliate links
-AFFILIATE_LINKS = {
-    "hosting": "https://your-affiliate-link.com/hosting",
-    "VPN": "https://your-affiliate-link.com/vpn",
-    "password manager": "https://your-affiliate-link.com/password-manager",
-    "email marketing": "https://your-affiliate-link.com/email-marketing",
-    "AI writing tool": "https://your-affiliate-link.com/ai-writer"
-}
+## 🌐 Ready to Launch Your Website?
 
-def insert_affiliate_links(text: str) -> str:
-    for keyword, url in AFFILIATE_LINKS.items():
-        # Only replace plain text, not already-linked keywords
-        pattern = rf"(?<!\]\()(?<!href=\")\b({re.escape(keyword)})\b"
-        replacement = rf"[\1]({url})"
-        text = re.sub(pattern, replacement, text, flags=re.IGNORECASE)
-    return text
+If you're a student looking for reliable, affordable hosting, I recommend [Hostinger](https://your-affiliate-link.com/hosting). It's what I use, and it’s perfect for beginners.
+
+👉 [Click here to get started with Hostinger](https://your-affiliate-link.com/hosting)
+
+---
+"""
+        return f"{text.strip()}\n\n{cta_block.strip()}"
+    else:
+        return text
+
 
