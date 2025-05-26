@@ -5,11 +5,11 @@ from generator.affiliate_inserter import insert_affiliate_ctas
 from generator.markdown_exporter import export_markdown
 from generator.push_to_git import push_post_to_github
 
-# === Initialize OpenAI Client (NEW SDK FORMAT) ===
-client = OpenAI(
-    api_key=st.secrets["OPENAI_API_KEY"],
-    base_url="https://api.openai.com/v1"
-)
+# === Initialize OpenAI Client (SDK v1.23.2) ===
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+
+# Optional: Uncomment this if you ever need to specify a different base_url (e.g., proxy or local server)
+# client = client.with_options(base_url="https://api.openai.com/v1")
 
 # === Streamlit UI Config ===
 st.set_page_config(page_title="Backdoor Blog Builder", layout="centered")
