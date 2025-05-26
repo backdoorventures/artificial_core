@@ -24,8 +24,11 @@ if st.button("Generate Post") and keyword.strip():
     with st.spinner("🧠 Generating your blog post..."):
         prompt = build_prompt(keyword, tone)
 
+        # ✅ Patch OpenAI client to avoid Streamlit proxy injection bug
+        client = openai.default_client.with_options(proxies=None)
+
         try:
-            response = openai.chat.completions.create(
+            response = client.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7
