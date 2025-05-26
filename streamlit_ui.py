@@ -1,34 +1,33 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 from generator.prompt_builder import build_prompt
 from generator.affiliate_inserter import insert_affiliate_ctas
 from generator.markdown_exporter import export_markdown
 from generator.push_to_git import push_post_to_github
 
-# 🔐 Load secrets & OpenAI client
-api_key = st.secrets["OPENAI_API_KEY"]
-client = OpenAI(api_key=api_key)
+# ✅ Set OpenAI API Key directly — DO NOT use OpenAI()
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
-# ⚙️ UI Setup
+# === Streamlit UI Config ===
 st.set_page_config(page_title="Backdoor Blog Builder", layout="centered")
 st.title("🚀 Backdoor Blog Builder")
 st.markdown("Generate SEO-optimized affiliate blog posts with one click.")
 
-# 📥 User Input
+# === Inputs ===
 keyword = st.text_input("🎯 Keyword (e.g. best web hosting for students 2025):")
 tone = st.selectbox("🗣️ Tone", ["professional", "conversational", "casual"])
 tags = st.text_input("🏷️ Tags (comma separated)", value="seo, affiliate, blogging")
 include_cta = st.checkbox("✅ Insert Hostinger CTA", value=True)
 
-# 🧠 Post Generator Logic
+# === Generate Button ===
 if st.button("Generate Post") and keyword.strip():
-    with st.spinner("Generating post..."):
+    with st.spinner("🧠 Generating your blog post..."):
 
         prompt = build_prompt(keyword, tone)
 
         try:
-            # ✅ OpenAI v1.0+ call
-            response = client.chat.completions.create(
+            # ✅ Correct call — NO OpenAI() constructor
+            response = openai.chat.completions.create(
                 model="gpt-4-turbo",
                 messages=[{"role": "user", "content": prompt}],
                 temperature=0.7
