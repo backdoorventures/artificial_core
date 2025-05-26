@@ -1,21 +1,11 @@
-import openai
-import streamlit as st
-
-def generate_blog_post(topic: str, tone: str = "professional", word_count: int = 1200) -> str:
-    prompt = (
-        f"Write a {tone}, SEO-optimized blog post of about {word_count} words "
-        f"on the topic: '{topic}'. Use subheadings, bullet points, and make it "
-        f"engaging and helpful. Format it for easy reading and avoid fluff."
+def build_prompt(topic: str, tone: str = "professional", word_count: int = 1200) -> str:
+    """
+    Returns a GPT-ready prompt string to generate a blog post.
+    """
+    return (
+        f"Write a {tone}, SEO-optimized blog post of around {word_count} words "
+        f"on the topic: '{topic}'. Use clear H1 and H2 subheadings, bullet points, and natural keyword placement. "
+        f"Make it helpful, engaging, and easy to read. Avoid fluff, and include a strong intro and conclusion."
     )
 
-    openai.api_key = st.secrets["OPENAI_API_KEY"]
-
-    response = openai.ChatCompletion.create(
-        model="gpt-4-turbo",
-        messages=[
-            {"role": "user", "content": prompt}
-        ]
-    )
-
-    return response.choices[0].message.content.strip()
 
