@@ -8,31 +8,36 @@ def slugify(text: str) -> str:
     Example: 'Best Hosting in 2025!' → 'best-hosting-in-2025'
     """
     text = text.lower()
-    text = re.sub(r"[^\w\s-]", "", text)          # remove special characters
-    text = re.sub(r"[\s_]+", "-", text)           # replace spaces/underscores with dash
+    text = re.sub(r"[^\w\s-]", "", text)  # remove punctuation
+    text = re.sub(r"[\s_]+", "-", text)   # replace spaces/underscores with dashes
     return text.strip("-")
 
-def format_markdown(title: str, body: str, tags: list) -> str:
+def format_markdown(title: str, body: str, tags: list, summary: str = None) -> str:
     """
-    Adds Hugo-compatible frontmatter to the blog post body.
+    Formats the post with Hugo-compatible YAML frontmatter.
     """
     frontmatter = {
-        "title": title,
+        "title": str(title).strip('"'),
         "date": datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ"),
         "tags": tags
     }
 
-    yaml_header = yaml.dump(frontmatter, default_flow_style=False).strip()
-    return f"---\n{yaml_header}\n---\n\n{body.strip()}"
+    if summary:
+        frontmatter["summary"] = summary.strip()
 
-def export_markdown(title: str, body: str, tags: str) -> tuple:
+    yaml_header = yaml.dump(frontmatter, default_flow_style=False, allow_unicode=True).strip()
+    markdown_body = body.strip()
+
+    return f"---\n{yaml_header}\n---\n\n{markdown_body}"
+
+def export_markdown(title: str, body: str, tags: str, summary: str = None) -> tuple:
     """
-    Converts input into Hugo-ready markdown with frontmatter and returns:
+    Converts the input into a slugged Hugo .md file and returns:
     (filename, markdown_string)
     """
-    tag_list = [tag.strip() for tag in tags.split(",")]
-    markdown_str = format_markdown(title, body, tag_list)
-    slug = slugify(title)
-    filename = f"{slug}.md"
+    tag_list = [tag.strip() for tag in tags.split(",") if tag.strip()]
+    markdown_str = format_markdown(title, body, tag_list, summary)
+    filename = f"{slugify(title)}.md"
     return filename, markdown_str
+
 
