@@ -1,12 +1,12 @@
 import streamlit as st
-import openai
+from openai import OpenAI
 from generator.prompt_builder import build_prompt
 from generator.affiliate_inserter import insert_affiliate_ctas
 from generator.markdown_exporter import export_markdown
 from generator.push_to_git import push_post_to_github
 
-# === Set OpenAI API Key globally (safe on Streamlit Cloud) ===
-openai.api_key = st.secrets["OPENAI_API_KEY"]
+# === Initialize OpenAI client correctly for v1.23.2+ ===
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # === Streamlit UI Config ===
 st.set_page_config(page_title="Backdoor Blog Builder", layout="centered")
@@ -23,9 +23,6 @@ include_cta = st.checkbox("✅ Insert Hostinger CTA", value=True)
 if st.button("Generate Post") and keyword.strip():
     with st.spinner("🧠 Generating your blog post..."):
         prompt = build_prompt(keyword, tone)
-
-        # ✅ Patch OpenAI client to avoid Streamlit proxy injection bug
-        client = openai.default_client.with_options(proxies=None)
 
         try:
             response = client.chat.completions.create(
@@ -58,6 +55,7 @@ if st.button("Generate Post") and keyword.strip():
 
 else:
     st.markdown("⚠️ Enter a keyword and click 'Generate Post' to begin.")
+
 
 
 
