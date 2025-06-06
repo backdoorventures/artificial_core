@@ -1,3 +1,15 @@
 streamlit==1.35.0
 openai>=1.23.2
 pyyaml==6.0.1
+
+# Video and image processing
+moviepy==1.0.3
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.8
+Pillow>=10.2.0
+
+# Google Cloud TTS
+google-cloud-texttospeech>=2.15.0
+
+# Numeric and system
+numpy
