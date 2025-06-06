@@ -10,6 +10,7 @@ Pillow>=10.2.0
 
 # Google Cloud TTS
 google-cloud-texttospeech>=2.15.0
+google-api-python-client>=2.98.0
 
 # Numeric and system
 numpy
