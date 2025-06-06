@@ -3,7 +3,7 @@ import requests
 from datetime import datetime
 import streamlit as st
 
-def push_post_to_github(filename: str, markdown_content: str, path_prefix: str = "content/posts/"):
+def push_post_to_github(filename: str, markdown_content: str, path_prefix: str = "content/blog/"):
     token = st.secrets["GITHUB_TOKEN"]
     repo = st.secrets["GITHUB_REPO"]
     branch = st.secrets.get("GITHUB_BRANCH", "main")
