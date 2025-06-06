@@ -9,7 +9,7 @@ def generate_title(script_text, keyword):
         f"The full video script is:\n'''\n{script_text}\n'''\n\n"
         "Rules:\n"
         "- Must be under 80 characters\n"
-        "- Must include or relate to the keyword naturally\n"
+        "- Must include the keyword naturally\n"
         "- No emojis, no hashtags, no hype\n"
         "- Write in title case\n"
         "- Make it sound like a premium launch video or futuristic product drop\n\n"
