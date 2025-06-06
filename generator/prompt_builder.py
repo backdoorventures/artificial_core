@@ -1,37 +1,53 @@
-def build_launchlayer_prompt(keyword: str, brand: str, affiliate_link: str, video_id: str, word_count: int = 1200) -> str:
+def build_launchlayer_prompt(
+    keyword: str,
+    video_id: str,
+    row: dict,
+    word_count: int = 1200
+) -> str:
     """
-    Builds a full SEO-optimized blog post prompt for LaunchLayer long-form content.
+    Builds an SEO-optimized blog post prompt using data from the affiliate row.
     """
+
+    product_name = row["product_name"]
+    affiliate_link = row["affiliate_link"]
+    product_brain = row["brain"]
 
     return f"""
-You are a senior SEO copywriter working for LaunchLayer — a futuristic review site that publishes high-conversion blog posts built around affiliate products.
+You are a world-class SEO content writer working for LaunchLayer — a clean, modern tech review site.
 
-Write a detailed, helpful blog post about the keyword: **"{keyword}"**. The brand being promoted is **{brand}**.
+Write a full-length blog post based on the keyword: **"{keyword}"**  
+The product being reviewed is: **{product_name}**
 
-## Formatting Rules:
-- Write in a natural, high-authority tone (not robotic, not hype)
-- Must be approx. {word_count} words
-- Use **H1 for the title**, and **H2s for major sections**
-- Include **bullet points or numbered lists** where useful
-- NEVER use inline hyperlinks — CTA is handled by our button system
-- Mention the product/brand name often and naturally
-- Write like a trusted expert helping readers make a smart decision
+You have internal documentation for reference:
+'''
+{product_brain}
+'''
 
-## Required Structure:
-1. **Cinematic intro paragraph** — hard-hitting, no fluff
-2. **Feature breakdown** — detailed list of what the product offers
-3. **Pricing + Free Plan clarity** — highlight limits, usage caps, etc.
-4. **Comparison to typical alternatives** — can be text or table format
-5. **Use cases** — bullet list of who this is best for
-6. **Final thoughts** — summary that reinforces value and encourages action
-7. **DO NOT include affiliate links or buttons — we insert them**
+Use this “brain” as your only source of truth. Mention specific features, strengths, limits, use cases, etc. Write as if you’ve personally used the tool.
 
-## Additional:
-- Assume a YouTube video will be embedded via `{{< youtube {video_id} >}}`
-- CTA buttons will be inserted via this config:
-    - Text: Try {brand}
+## Style & Structure:
+- Tone: clean, confident, professional (not hype, not robotic)
+- Length: ~{word_count} words
+- Use H1 for the title, H2s for major sections
+- Use bullet points or numbered lists when appropriate
+- **Never** include markdown links or `[text](url)` — CTA buttons will be handled by the system
+- Mention the product name naturally throughout
+- Use the keyword early and 3–4 more times in a natural way
+
+## Required Content Sections:
+1. SEO-optimized intro paragraph using the keyword
+2. Full feature breakdown based on the product brain
+3. Clear explanation of pricing or free limits
+4. Comparison to common competitors
+5. Bullet list of ideal use cases
+6. Final thoughts with subtle push toward action
+
+## Embedded:
+- A YouTube video will be embedded like this: `{{< youtube {video_id} >}}`
+- A CTA button will be auto-inserted with:
+    - Text: Try {product_name} or Check out {product_name}
     - URL: {affiliate_link}
     - Position: both
 
-Write the blog post body only. No frontmatter. No formatting instructions. Just clean markdown-ready content.
+Return **only** the markdown body content. No frontmatter. No instructions. No disclaimers.
 """
