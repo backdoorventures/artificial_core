@@ -4,7 +4,7 @@ import gc
 
 from generator.launchlayer_video.script_writer import expand_keyword_to_script
 from generator.launchlayer_video.title_maker import generate_title
-from generator.launchlayer_video.description_maker import generate_description
+from generator.launchlayer_video.description_builder import generate_description
 from generator.launchlayer_video.voiceover import generate_voiceover
 from generator.launchlayer_video.layout import generate_text_images
 from generator.launchlayer_video.renderer import render_final_video
