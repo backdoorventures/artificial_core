@@ -1,19 +1,28 @@
-def insert_affiliate_ctas(text: str, product: str = "Hostinger") -> str:
-    if product.lower() == "hostinger":
-        cta_block = """
----
+import pandas as pd
 
-## 🚀 Launch Your First Website Today
+def get_next_affiliate(csv_path="data/affiliate_products.csv") -> dict:
+    df = pd.read_csv(csv_path)
 
-If you're a student or beginner looking to start a blog, portfolio, or side hustle, **Hostinger is one of the top-rated platforms** for getting started fast — and affordably.
+    # Get next unused row
+    unused = df[df["used"] == False]
+    if unused.empty:
+        # Reset if all used
+        df["used"] = False
+        df.to_csv(csv_path, index=False)
+        df = pd.read_csv(csv_path)
+        unused = df[df["used"] == False]
 
-It’s beginner-friendly, includes a free domain, and takes less than 10 minutes to go live.
+    row = unused.iloc[0]
+    df.at[row.name, "used"] = True
+    df.to_csv(csv_path, index=False)
 
-👉 **[Click here to launch your website with Hostinger](https://your-affiliate-link.com/hosting)**  
-🎯 No tech skills required. Perfect for your first online project.
+    # Pull specific brain file (not folder)
+    brain_path = row["product_brain_file"]
+    with open(brain_path, "r", encoding="utf-8") as f:
+        brain_text = f.read()
 
----
-"""
-        return f"{text.strip()}\n\n{cta_block.strip()}"
-    else:
-        return text
+    return {
+        "name": row["product_name"],
+        "link": row["affiliate_link"],
+        "brain": brain_text
+    }
