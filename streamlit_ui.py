@@ -2,7 +2,7 @@ import streamlit as st
 from openai import OpenAI
 from generator.affiliate_inserter import get_next_affiliate
 from generator.prompt_builder import build_launchlayer_prompt
-from generator.description_builder import build_description
+from generator.description_builder import generate_description
 from generator.markdown_exporter import export_markdown
 from generator.push_to_git import push_post_to_github
 
