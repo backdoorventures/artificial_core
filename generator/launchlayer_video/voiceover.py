@@ -5,7 +5,7 @@ from google.oauth2 import service_account
 
 # Load credentials from env (as JSON string)
 credentials = service_account.Credentials.from_service_account_info(
-    json.loads(os.getenv("GOOGLE_SERVICE_ACCOUNT"))
+    st.secrets["GOOGLE_SERVICE_ACCOUNT"]
 )
 
 tts_client = texttospeech.TextToSpeechClient(credentials=credentials)
