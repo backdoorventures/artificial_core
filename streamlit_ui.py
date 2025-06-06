@@ -22,12 +22,17 @@ keyword = st.text_input("🎯 Enter Video Title / Keyword")
 if st.button("🧠 Fetch Product + Start Generation") and keyword.strip():
     product = get_next_affiliate()
     st.session_state.product = product
-    prompt = build_prompt(
+
+    prompt = build_launchlayer_prompt(
         keyword=keyword,
-        product_name=product["name"],
-        affiliate_link=product["link"],
-        brain_text=product["brain"]
+        video_id="TO_BE_INSERTED",
+        row={
+            "product_name": product["product_name"],
+            "affiliate_link": product["affiliate_link"],
+            "brain": product["brain"]
+        }
     )
+
     try:
         response = client.chat.completions.create(
             model="gpt-4-turbo",
@@ -47,9 +52,10 @@ if st.session_state.step1_ready:
     st.markdown("### 🎬 Generated Video Script")
     st.code(st.session_state.script, language="markdown")
     if st.button("✅ Approve Script & Build Video Description"):
-        desc = build_description(
+        desc = generate_description(
             keyword=st.session_state.keyword,
-            script_text=st.session_state.script
+            script_text=st.session_state.script,
+            affiliate_link=st.session_state.product["affiliate_link"]
         )
         st.session_state.description = desc
         st.session_state.step2_ready = True
@@ -80,6 +86,7 @@ if st.session_state.step3_ready:
     if st.button("🚀 Push to LaunchLayer Blog"):
         success, msg = push_post_to_github(st.session_state.filename, st.session_state.markdown)
         st.success(msg if success else f"❌ Push failed: {msg}")
+
 
 
 
