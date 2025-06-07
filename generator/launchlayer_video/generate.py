@@ -1,4 +1,5 @@
 import os
+import random
 import tempfile
 import gc
 
@@ -9,8 +10,16 @@ from generator.launchlayer_video.voiceover import generate_voiceover
 from generator.launchlayer_video.layout import generate_text_images
 from generator.launchlayer_video.renderer import render_final_video
 
-def generate_video(keyword, background_path, music_path, logo_path, affiliate_link, output_name="launchlayer_output.mp4"):
+
+def generate_video(keyword, music_path, logo_path, affiliate_link, output_name="launchlayer_output.mp4"):
     try:
+        # Auto-pick random loop background
+        loop_folder = "generator/launchlayer_video/assets/loops"
+        candidates = [f for f in os.listdir(loop_folder) if f.endswith(".mp4")]
+        if not candidates:
+            raise FileNotFoundError("No background video found in assets/loops")
+        background_path = os.path.join(loop_folder, random.choice(candidates))
+
         script = expand_keyword_to_script(keyword)
         title = generate_title(script, keyword)
         description = generate_description(keyword, script, affiliate_link)
@@ -33,12 +42,14 @@ def generate_video(keyword, background_path, music_path, logo_path, affiliate_li
     except Exception as e:
         import streamlit as st
         st.error(f"🔥 Video Generation Error: {str(e)}")
-        raise e  # will show full traceback
-        
+        raise e
+
     finally:
         gc.collect()
+
 
 def AudioDuration(path):
     from moviepy.editor import AudioFileClip
     return AudioFileClip(path).duration
+
 
