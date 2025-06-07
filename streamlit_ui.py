@@ -8,7 +8,7 @@ from generator.affiliate_inserter import get_next_affiliate
 from generator.launchlayer_video.generate import generate_video
 
 # STEP 2.5: Upload to YouTube
-from generator.youtube_poster import upload_video_to_youtube
+from generator.youtube_poster import upload_to_youtube
 
 # STEP 3: Build blog post prompt
 from generator.prompt_builder import build_launchlayer_prompt
