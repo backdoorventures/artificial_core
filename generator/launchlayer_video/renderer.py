@@ -8,6 +8,10 @@ from moviepy.editor import (
 )
 from moviepy.video.fx.all import blackwhite
 
+# === ANTIALIAS PATCH ===
+if not hasattr(PILImage, 'ANTIALIAS'):
+    PILImage.ANTIALIAS = PILImage.Resampling.LANCZOS
+
 RESOLUTION = (1920, 1080)
 
 def generate_background_clip(video_path, duration):
@@ -15,7 +19,7 @@ def generate_background_clip(video_path, duration):
 
     def resize_frame(frame):
         img = PILImage.fromarray(frame)
-        return np.array(img.resize(RESOLUTION, PILImage.Resampling.LANCZOS))
+        return np.array(img.resize(RESOLUTION, PILImage.ANTIALIAS))
 
     resized = clip.fl_image(resize_frame).loop(duration=duration).set_duration(duration)
     overlay = ColorClip(size=RESOLUTION, color=(0, 0, 0)).set_opacity(0.4).set_duration(duration)
@@ -79,4 +83,5 @@ def render_final_video(background_path, overlays, voice_path, music_path, logo_p
         c.close()
 
     return output_path
+
 
