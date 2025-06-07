@@ -1,35 +1,34 @@
 import streamlit as st
 from openai import OpenAI
 
-# STEP 1: Get affiliate product
+# Step 1: Affiliate product
 from generator.affiliate_inserter import get_next_affiliate
 
-# STEP 2: Generate video (script, voiceover, render)
+# Step 2: Generate video (script, voiceover, render)
 from generator.launchlayer_video.generate import generate_video
 
-# STEP 2.5: Upload to YouTube
-from generator.youtube_poster import upload_to_youtube
+# Step 2.5: Upload to YouTube
+from generator.youtube_poster import upload_video_to_youtube
 
-# STEP 3: Build blog post prompt
+# Step 3: Blog generation
 from generator.prompt_builder import build_launchlayer_prompt
 
-# STEP 4: Export markdown
+# Step 4: Export markdown
 from generator.markdown_exporter import export_markdown
 
-# STEP 5: Push to Git
+# Step 5: Push to GitHub
 from generator.push_to_git import push_post_to_github
 
-# === Init ===
+# Init
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 st.set_page_config(page_title="LaunchLayer: Full Automation", layout="centered")
 st.title("🚀 LaunchLayer: Affiliate Video + Blog Automation")
 
-# === Session state ===
+# Init session state
 for key in ["step1_ready", "step2_ready", "step3_ready", "step4_ready"]:
-    if key not in st.session_state:
-        st.session_state[key] = False
+    st.session_state.setdefault(key, False)
 
-# === Step 0: Get Affiliate Product ===
+# === Step 0: Load Next Product ===
 if st.button("🎯 Get Next Affiliate Product"):
     product = get_next_affiliate()
     st.session_state.product = product
@@ -37,7 +36,7 @@ if st.button("🎯 Get Next Affiliate Product"):
     st.markdown(f"- **Name**: {product['name']}\n- **Link**: {product['link']}")
     st.session_state.step1_ready = True
 
-# === Step 1: Manual Keyword Entry + Generate Video ===
+# === Step 1: Generate Video ===
 if st.session_state.step1_ready:
     keyword = st.text_input("🔑 Enter Keyword for Video + Blog")
     if st.button("🎥 Generate Video from Keyword") and keyword.strip():
@@ -117,7 +116,10 @@ if st.session_state.step4_ready:
     st.download_button("📥 Download Markdown", st.session_state.markdown, file_name=st.session_state.filename)
     if st.button("🚀 Push to Blog"):
         success, msg = push_post_to_github(st.session_state.filename, st.session_state.markdown)
-        st.success(msg if success else f"❌ Push failed: {msg}")
+        if success:
+            st.success(msg)
+        else:
+            st.error(f"❌ Push failed: {msg}")
 
 
 
