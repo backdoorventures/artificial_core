@@ -10,7 +10,6 @@ from generator.launchlayer_video.voiceover import generate_voiceover
 from generator.launchlayer_video.layout import generate_text_images
 from generator.launchlayer_video.renderer import render_final_video
 
-
 def generate_video(keyword, music_path, logo_path, affiliate_link, output_name="launchlayer_output.mp4"):
     try:
         # Auto-pick random loop background
@@ -37,6 +36,12 @@ def generate_video(keyword, music_path, logo_path, affiliate_link, output_name="
             output_path=output_path
         )
 
+        # 🔍 Debug print before return
+        print("DEBUG: Output Path =", output_path)
+        print("DEBUG: Keyword =", keyword)
+        print("DEBUG: Title =", title)
+        print("DEBUG: Description =", description)
+
         return output_path, keyword, title, description
 
     except Exception as e:
@@ -47,9 +52,9 @@ def generate_video(keyword, music_path, logo_path, affiliate_link, output_name="
     finally:
         gc.collect()
 
-
 def AudioDuration(path):
     from moviepy.editor import AudioFileClip
     return AudioFileClip(path).duration
+
 
 
