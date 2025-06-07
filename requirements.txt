@@ -8,9 +8,11 @@ imageio>=2.31.0
 imageio-ffmpeg>=0.4.8
 Pillow>=10.2.0
 
-# Google Cloud TTS
+# Google 
 google-cloud-texttospeech>=2.15.0
 google-api-python-client>=2.98.0
+google-auth>=2.0.0
+google-auth-oauthlib>=1.0.0
 
 # Numeric and system
 numpy
