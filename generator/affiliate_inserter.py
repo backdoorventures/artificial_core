@@ -25,4 +25,5 @@ def get_next_affiliate(csv_path="data/affiliate_products.csv") -> dict:
         "name": row["product_name"],
         "link": row["affiliate_link"],
         "brain": brain_text
+        "brain_path": brain_path
     }
