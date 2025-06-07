@@ -45,8 +45,6 @@ if st.session_state.step1_ready:
             product = st.session_state.product
             video_path, keyword, title, description = generate_video(
                 keyword=keyword,
-                background_path="assets/bg.mp4",
-                music_path="assets/music.mp3",
                 logo_path="assets/logo.png",
                 affiliate_link=product["link"]
             )
