@@ -4,9 +4,15 @@ from PIL import Image as PILImage, ImageDraw, ImageFont
 from generator.launchlayer_video.utils import split_sentences, wrap_text
 
 RESOLUTION = (1920, 1080)
-FONT_PATH = "generator/launchlayer_video/assets/Montserrat-Bold.ttf"
 TEXT_COLOR = "white"
 FONT_SIZE = 100
+
+# Dynamically resolve font path
+FONT_PATH = (
+    Path(__file__)
+    .resolve()
+    .parent / "assets" / "fonts" / "Montserrat-Bold.ttf"
+)
 
 def generate_text_images(script_text, duration):
     sentences = split_sentences(script_text)
@@ -19,7 +25,7 @@ def generate_text_images(script_text, duration):
         font_size = FONT_SIZE
 
         while True:
-            font = ImageFont.truetype(FONT_PATH, font_size)
+            font = ImageFont.truetype(str(FONT_PATH), font_size)
             wrapped = wrap_text(sentence, font, max_width)
             draw = ImageDraw.Draw(PILImage.new("RGBA", RESOLUTION))
             bbox = draw.textbbox((0, 0), wrapped, font=font)
@@ -39,4 +45,5 @@ def generate_text_images(script_text, duration):
         overlays.append((path, dur))
 
     return overlays  # list of (image_path, duration)
+
 
