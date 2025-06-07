@@ -10,15 +10,23 @@ from generator.launchlayer_video.voiceover import generate_voiceover
 from generator.launchlayer_video.layout import generate_text_images
 from generator.launchlayer_video.renderer import render_final_video
 
-def generate_video(keyword, music_path, logo_path, affiliate_link, output_name="launchlayer_output.mp4"):
+def generate_video(keyword, logo_path, affiliate_link, output_name="launchlayer_output.mp4"):
     try:
-        # Auto-pick random loop background
+        # === Auto-pick random background loop ===
         loop_folder = "generator/launchlayer_video/assets/loops"
-        candidates = [f for f in os.listdir(loop_folder) if f.endswith(".mp4")]
-        if not candidates:
-            raise FileNotFoundError("No background video found in assets/loops")
-        background_path = os.path.join(loop_folder, random.choice(candidates))
+        loop_candidates = [f for f in os.listdir(loop_folder) if f.endswith(".mp4")]
+        if not loop_candidates:
+            raise FileNotFoundError("❌ No .mp4 files in assets/loops")
+        background_path = os.path.join(loop_folder, random.choice(loop_candidates))
 
+        # === Auto-pick random music ===
+        music_folder = "generator/launchlayer_video/assets/music"
+        music_candidates = [f for f in os.listdir(music_folder) if f.endswith(".mp3")]
+        if not music_candidates:
+            raise FileNotFoundError("❌ No .mp3 files in assets/music")
+        music_path = os.path.join(music_folder, random.choice(music_candidates))
+
+        # === Generate content ===
         script = expand_keyword_to_script(keyword)
         title = generate_title(script, keyword)
         description = generate_description(keyword, script, affiliate_link)
@@ -35,12 +43,6 @@ def generate_video(keyword, music_path, logo_path, affiliate_link, output_name="
             logo_path=logo_path,
             output_path=output_path
         )
-
-        # 🔍 Debug print before return
-        print("DEBUG: Output Path =", output_path)
-        print("DEBUG: Keyword =", keyword)
-        print("DEBUG: Title =", title)
-        print("DEBUG: Description =", description)
 
         return output_path, keyword, title, description
 
