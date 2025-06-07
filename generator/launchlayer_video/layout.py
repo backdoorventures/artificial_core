@@ -4,7 +4,7 @@ from PIL import Image as PILImage, ImageDraw, ImageFont
 from generator.launchlayer_video.utils import split_sentences, wrap_text
 
 RESOLUTION = (1920, 1080)
-FONT_PATH = "assets/fonts/Montserrat-Bold.ttf"
+FONT_PATH = "generator/launchlayer_video/assets/Montserrat-Bold.ttf"
 TEXT_COLOR = "white"
 FONT_SIZE = 100
 
