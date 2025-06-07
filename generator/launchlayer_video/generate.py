@@ -31,9 +31,10 @@ def generate_video(keyword, background_path, music_path, logo_path, affiliate_li
         return output_path, keyword, title, description
 
     except Exception as e:
-        print("🔥 Generation Failed:", str(e))
-        return None, keyword, None, None
-
+        import streamlit as st
+        st.error(f"🔥 Video Generation Error: {str(e)}")
+        raise e  # will show full traceback
+        
     finally:
         gc.collect()
 
